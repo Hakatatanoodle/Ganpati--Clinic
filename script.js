@@ -17,18 +17,30 @@ patientForm.addEventListener("focusin",e=>{const fields=getFieldOrder();const i=
 $("prevSection").onclick=()=>{const fields=getFieldOrder();if(!fields.length)return;const activeIdx=fields.indexOf(document.activeElement);const fromIdx=activeIdx>=0?activeIdx:lastFieldIndex;if(fromIdx<=0){window.scrollTo({top:0,behavior:"smooth"});return}const targetIdx=fromIdx-1;lastFieldIndex=targetIdx;const el=fields[targetIdx];el.focus();el.scrollIntoView({behavior:"smooth",block:"center"})};document.querySelectorAll(".nav[data-target]").forEach(b=>b.onclick=()=>showSection(b.dataset.target));document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>showSection(b.dataset.open));
 onAuthStateChanged(auth,u=>{if(unsub){unsub();unsub=null}if(!u){$("auth").classList.remove("hide");$("app").classList.add("hide");return}$("auth").classList.add("hide");$("app").classList.remove("hide");$("userEmail").textContent=u.email||"";let ref=collection(db,"users",u.uid,"patients");unsub=onSnapshot(query(ref,orderBy("createdAt","desc")),s=>{records=s.docs.map(d=>({id:d.id,...d.data()}));render();recent();stats()},e=>{$("records").innerHTML='<p class="error">Could not load records. Publish the included Firestore rules and confirm Firestore exists.</p>';console.error(e)})});
 patientForm.addEventListener("keydown", e => {
-  if (e.key !== "Enter" || e.ctrlKey || e.altKey || e.metaKey) return;
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
   const el = e.target;
   if (!el.matches("input, select, textarea")) return;
-  // Enter creates a new line in every textarea. Normal fields use Enter to move to the next field.
-  if (el.tagName === "TEXTAREA") return;
-  e.preventDefault();
   const fields = [...patientForm.querySelectorAll("input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled])")];
   const index = fields.indexOf(el);
-  const next = fields[index + 1];
-  if (next) {
-    next.focus();
-    if (next.tagName === "INPUT" && next.type !== "date" && typeof next.select === "function") next.select();
+
+  if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    const prev = fields[index - 1];
+    if (prev) {
+      prev.focus();
+      if (prev.tagName === "INPUT" && prev.type !== "date" && typeof prev.select === "function") prev.select();
+    }
+    return;
+  }
+
+  if (e.key === "Enter") {
+    if (el.tagName === "TEXTAREA") return;
+    e.preventDefault();
+    const next = fields[index + 1];
+    if (next) {
+      next.focus();
+      if (next.tagName === "INPUT" && next.type !== "date" && typeof next.select === "function") next.select();
+    }
   }
 });
 $("patientForm").onsubmit=async e=>{e.preventDefault();$("message").textContent="Saving...";let u=auth.currentUser;if(!u)return;syncAge();let data={};ids.forEach(i=>data[i]=$(i).value.trim());data.age=data.age||"0 Years, 0 Months, 0 Days";data.ageYears=data.ageYears||"0";data.ageMonths=data.ageMonths||"0";data.ageDays=data.ageDays||"0";try{let path=["users",u.uid,"patients"];if($("recordId").value)await updateDoc(doc(db,...path,$("recordId").value),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,...path),{...data,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});reset();$("message").textContent="Patient record saved successfully."}catch(x){console.error(x);$("message").textContent="Save failed. Publish firestore.rules and check Firebase.";$("message").className="error"}};
