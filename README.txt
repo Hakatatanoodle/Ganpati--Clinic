@@ -23,6 +23,8 @@ Latest updates:
 - Payment Details follows the requested 2-column layout: Frame Amt, Lens Amt, Medicines, Clinical Test, Others, Total, Advance, Remaining.
 - Payment Total = Frame + Lens + Medicines + Clinical Test + Others; Remaining = Total - Advance.
 - Payment amounts use 0.10 increments.
+- Age boxes now have explicit "Year / Month / Days" labels above each box (instead of relying on placeholder text), and the Age column is wider so the boxes aren't squeezed down to spinner-only width.
+- Previous Section button now steps back one field at a time through every input/select/textarea on the form (in on-screen order), instead of only jumping between 7 fixed landmark fields.
 
 
 Updated form changes:
