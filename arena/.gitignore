@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+arena_data/
+.env
+
+# Node
+node_modules/
+frontend/dist/
+
+# Misc
+.DS_Store
