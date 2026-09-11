@@ -36,15 +36,20 @@ export function connectGame(gameId, { onSnapshot, onEvent, onStatus }) {
   let poll = null
   let closed = false
   let retries = 0
-  let polledSeq = -1
+  let seenSeq = -1
 
   async function pollOnce() {
     try {
       const snap = await api.getGame(gameId)
       onSnapshot(snap)
-      const ev = await fetch(`/api/games/${gameId}/events?after=${snap.event_count - 1}`)
+      const ev = await fetch(`/api/games/${gameId}/events?after=${seenSeq}`)
         .then((r) => r.json())
-      for (const e of ev.events || []) onEvent(e)
+      for (const e of ev.events || []) {
+        if (e.seq > seenSeq) {
+          seenSeq = e.seq
+          onEvent(e)
+        }
+      }
     } catch {}
   }
 
@@ -61,7 +66,10 @@ export function connectGame(gameId, { onSnapshot, onEvent, onStatus }) {
     ws.onmessage = (m) => {
       const msg = JSON.parse(m.data)
       if (msg.type === 'snapshot') onSnapshot(msg.snapshot)
-      if (msg.type === 'event') onEvent(msg.event)
+      if (msg.type === 'event') {
+        seenSeq = Math.max(seenSeq, msg.event.seq)
+        onEvent(msg.event)
+      }
     }
     ws.onclose = () => {
       if (closed) return

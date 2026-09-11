@@ -19,7 +19,8 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
-from .games.base import ActionRecord, InvalidAction, RoundPlan
+from .games.base import (ActionRecord, InvalidAction, RoundPlan,
+                         default_action)
 from .games.registry import get_game
 from .gateway.base import ModelResponse, TurnRequest
 from .gateway.registry import REGISTRY
@@ -339,8 +340,4 @@ class GameMaster:
 
     @staticmethod
     def _default_action(plan: RoundPlan, pid: str, round_no: int) -> int:
-        spec = plan.action_spec
-        if spec.get("kind") == "choice":
-            h = int(hashlib.sha256(f"{pid}|{round_no}".encode()).hexdigest(), 16)
-            return int(spec["options"][h % len(spec["options"])])
-        return int(spec.get("max", 100))
+        return default_action(plan.action_spec, pid, round_no)

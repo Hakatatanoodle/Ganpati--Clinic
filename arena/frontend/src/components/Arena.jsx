@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { api, connectGame } from '../api.js'
 import Scoreboard from './Scoreboard.jsx'
 import EventFeed from './EventFeed.jsx'
@@ -11,14 +11,24 @@ export default function Arena({ gameId, onExit, onOpenSettings }) {
   const [events, setEvents] = useState([])
   const [conn, setConn] = useState('connecting')
   const [speed, setSpeed] = useState(2.5)
+  const refreshTimer = useRef(null)
 
   useEffect(() => {
     const evMap = new Map()
+    // Events drive the feed; the authoritative snapshot is re-fetched in a
+    // trailing debounce so bursts (parallel player actions) cost one request.
+    const scheduleRefresh = () => {
+      clearTimeout(refreshTimer.current)
+      refreshTimer.current = setTimeout(async () => {
+        try { setSnap(await api.getGame(gameId)) } catch {}
+      }, 90)
+    }
     const stop = connectGame(gameId, {
       onSnapshot: (s) => setSnap(s),
       onEvent: (e) => {
         evMap.set(e.seq, e)
         setEvents([...evMap.values()].sort((a, b) => a.seq - b.seq))
+        scheduleRefresh()
       },
       onStatus: setConn,
     })

@@ -20,7 +20,8 @@ import json
 from typing import Any
 
 from ..schemas import GameConfig, GameSnapshot
-from .base import ActionRecord, GamePlugin, InvalidAction, RoundOutcome, RoundPlan
+from .base import (ActionRecord, GamePlugin, InvalidAction, RoundOutcome,
+                   RoundPlan, default_action)
 
 
 RULE_CORE = {
@@ -142,19 +143,18 @@ class BeautyContestPlugin(GamePlugin):
         alive = [p for p in snapshot.players.values() if p.status == "alive"]
         alive_ids = [p.config.id for p in alive]
 
-        # Invalid actions get a punitive default so play never stalls.
-        defaults: dict[str, float] = {}
-        if plan_spec_is_binary(state, round_no):
-            defaults = {pid: (100 if (i % 2) else 0)
-                        for i, pid in enumerate(alive_ids)}
-        else:
-            defaults = {pid: float(cfg.guess_max) for pid in alive_ids}
+        # Invalid actions get a deterministic punitive default (same helper
+        # the engine emits on the player's card) so play never stalls.
+        round_spec = (
+            {"kind": "choice", "options": [0, 100]}
+            if plan_spec_is_binary(state, round_no)
+            else {"kind": "number", "min": cfg.guess_min, "max": cfg.guess_max})
 
         guesses: dict[str, float] = {}
         for pid in alive_ids:
             rec = actions.get(pid)
             if rec is None or not rec.valid:
-                guesses[pid] = defaults[pid]
+                guesses[pid] = float(default_action(round_spec, pid, round_no))
             else:
                 guesses[pid] = float(rec.action)
 

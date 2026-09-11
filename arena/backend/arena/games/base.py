@@ -8,6 +8,7 @@ and registering it in ``games/registry.py``.
 """
 from __future__ import annotations
 
+import hashlib
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
@@ -17,6 +18,15 @@ from ..schemas import GameConfig, GameSnapshot
 
 class InvalidAction(ValueError):
     """Raised when a player's action cannot be coerced into a legal move."""
+
+
+def default_action(action_spec: dict[str, Any], player_id: str, round_no: int) -> Any:
+    """Deterministic referee-assigned move for dead/invalid responses."""
+    if action_spec.get("kind") == "choice":
+        options = action_spec["options"]
+        h = int(hashlib.sha256(f"{player_id}|{round_no}".encode()).hexdigest(), 16)
+        return options[h % len(options)]
+    return int(action_spec.get("max", 100))
 
 
 @dataclass
