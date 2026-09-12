@@ -1,5 +1,5 @@
 import {auth,db} from "./firebase.js";import{createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";import{collection,addDoc,updateDoc,deleteDoc,doc,onSnapshot,query,orderBy,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-const $=id=>document.getElementById(id),ids=["name","ageYears","ageMonths","ageDays","age","patientDate","contact","address","gender","occupation","presentingComplaint","ucvaRe","ucvaLe","phRe","phLe","dryRe","dryLe","wetRe","wetLe","bcvaReSph","bcvaReCyl","bcvaReAxis","bcvaReVa","bcvaLeSph","bcvaLeCyl","bcvaLeAxis","bcvaLeVa","bcvaAddRe","bcvaAddLe","bcvaPd","pgReSph","pgReCyl","pgReAxis","pgReVa","pgLeSph","pgLeCyl","pgLeAxis","pgLeVa","pgAddRe","pgAddLe","systemicDetails","ocularHistory","sch1Re","sch1Le","sch2Re","sch2Le","bp","colorVisionRe","colorVisionLe","iopRe","iopLe","examiner","diagnosis","additionalNotes","medicines","suggestions","lensLeSph","lensLeCyl","lensLeAxis","lensLeVa","lensLeAdd","lensReSph","lensReCyl","lensReAxis","lensReVa","lensReAdd","lensType","lensRemarks","frameType","lensMaterial","lensCoating","lensCoatingOther","frameAmount","lensAmount","totalAmount","advanceAmount","remainingAmount","medicinesAmount","clinicalTestAmount","othersAmount"];let records=[],unsub=null;
+const $=id=>document.getElementById(id),ids=["name","ageYears","ageMonths","ageDays","age","patientDate","contact","address","gender","occupation","presentingComplaint","ucvaRe","ucvaLe","phRe","phLe","dryRe","dryLe","wetRe","wetLe","bcvaReSph","bcvaReCyl","bcvaReAxis","bcvaReVa","bcvaLeSph","bcvaLeCyl","bcvaLeAxis","bcvaLeVa","bcvaAddRe","bcvaAddLe","bcvaPd","pgReSph","pgReCyl","pgReAxis","pgReVa","pgLeSph","pgLeCyl","pgLeAxis","pgLeVa","pgAddRe","pgAddLe","systemicDetails","ocularHistory","sch1Re","sch1Le","sch2Re","sch2Le","bp","colorVisionRe","colorVisionLe","iopRe","iopLe","examiner","diagnosis","diagnosisFinal","additionalNotes","medicines","suggestions","lensLeSph","lensLeCyl","lensLeAxis","lensLeVa","lensLeAdd","lensReSph","lensReCyl","lensReAxis","lensReVa","lensReAdd","lensType","lensRemarks","frameType","lensMaterial","lensCoating","lensCoatingOther","frameAmount","lensAmount","totalAmount","advanceAmount","remainingAmount","medicinesAmount","clinicalTestAmount","othersAmount"];let records=[],unsub=null;
 function today(){let d=new Date();return d.toISOString().slice(0,10)}$("patientDate").value=today();
 function syncAge(){const y=$("ageYears").value.trim(),m=$("ageMonths").value.trim(),d=$("ageDays").value.trim();$("age").value=(y||"0")+" Years, "+(m||"0")+" Months, "+(d||"0")+" Days"}
 $("ageYears").addEventListener("input",syncAge);$("ageMonths").addEventListener("input",syncAge);$("ageDays").addEventListener("input",syncAge);
@@ -9,7 +9,7 @@ function toggleLensCoatingOther(){const show=$("lensCoating").value==="others";$
 $("lensCoating").addEventListener("change",toggleLensCoatingOther);toggleLensCoatingOther();
 $("toSignup").onclick=()=>{$("loginPanel").classList.add("hide");$("signupPanel").classList.remove("hide")};$("toLogin").onclick=()=>{$("signupPanel").classList.add("hide");$("loginPanel").classList.remove("hide")};
 $("loginForm").onsubmit=async e=>{e.preventDefault();try{await signInWithEmailAndPassword(auth,$("loginEmail").value.trim(),$("loginPassword").value)}catch(x){$("loginError").textContent=err(x)}};$("signupForm").onsubmit=async e=>{e.preventDefault();$("signupError").textContent="";if($("signupPassword").value!==$("signupConfirm").value){$("signupError").textContent="Passwords do not match.";return}try{await createUserWithEmailAndPassword(auth,$("signupEmail").value.trim(),$("signupPassword").value)}catch(x){$("signupError").textContent=err(x)}};function err(x){if(x.code?.includes("email-already"))return"This email already has an account.";if(x.code?.includes("weak-password"))return"Password must be at least 6 characters.";if(x.code?.includes("invalid-credential"))return"Incorrect email or password.";return"Authentication failed. Check Firebase Authentication."}
-$("logout").onclick=()=>signOut(auth);$("sideLogout").onclick=()=>signOut(auth);$("clear").onclick=reset;$("saveTop").onclick=()=>$("patientForm").requestSubmit();$("cancel").onclick=reset;$("search").oninput=render;
+const logoutModal=$("logoutModal");function openLogout(){logoutModal.classList.remove("hide");setTimeout(()=>$("logoutNo").focus(),0)}function closeLogout(){logoutModal.classList.add("hide")}$("logout").onclick=openLogout;$("sideLogout").onclick=openLogout;$("logoutNo").onclick=closeLogout;$("logoutYes").onclick=async()=>{closeLogout();await signOut(auth)};logoutModal.addEventListener("click",e=>{if(e.target===logoutModal)closeLogout()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!logoutModal.classList.contains("hide"))closeLogout()});$("clear").onclick=reset;$("saveTop").onclick=()=>$("patientForm").requestSubmit();$("cancel").onclick=reset;$("search").oninput=render;
 function showSection(id){const sections=["dashboardCard","formCard","recordsCard","reportsCard","usersCard","backupCard","aboutCard"];sections.forEach(x=>$(x).classList.toggle("hide",x!==id));$("formActions").classList.toggle("hide",id!=="formCard");document.querySelectorAll(".nav[data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));if(id==="recordsCard")render();const titles={dashboardCard:"Dashboard",formCard:"Add / Edit Patient Record",recordsCard:"Patient Records",reportsCard:"Reports",usersCard:"Users",backupCard:"Backup",aboutCard:"About Us"};$("pageTitle").textContent=titles[id]||"Dashboard";$("breadcrumb").textContent=id==="dashboardCard"?"Dashboard":`Dashboard › ${titles[id]||""}`;window.scrollTo({top:0,behavior:"smooth"})}
 function getFieldOrder(){return [...patientForm.querySelectorAll("input:not([type=hidden]):not([readonly]):not([disabled]), select:not([disabled]), textarea:not([disabled])")]}
 let lastFieldIndex=0;
@@ -17,30 +17,18 @@ patientForm.addEventListener("focusin",e=>{const fields=getFieldOrder();const i=
 $("prevSection").onclick=()=>{const fields=getFieldOrder();if(!fields.length)return;const activeIdx=fields.indexOf(document.activeElement);const fromIdx=activeIdx>=0?activeIdx:lastFieldIndex;if(fromIdx<=0){window.scrollTo({top:0,behavior:"smooth"});return}const targetIdx=fromIdx-1;lastFieldIndex=targetIdx;const el=fields[targetIdx];el.focus();el.scrollIntoView({behavior:"smooth",block:"center"})};document.querySelectorAll(".nav[data-target]").forEach(b=>b.onclick=()=>showSection(b.dataset.target));document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>showSection(b.dataset.open));
 onAuthStateChanged(auth,u=>{if(unsub){unsub();unsub=null}if(!u){$("auth").classList.remove("hide");$("app").classList.add("hide");return}$("auth").classList.add("hide");$("app").classList.remove("hide");$("userEmail").textContent=u.email||"";let ref=collection(db,"users",u.uid,"patients");unsub=onSnapshot(query(ref,orderBy("createdAt","desc")),s=>{records=s.docs.map(d=>({id:d.id,...d.data()}));render();recent();stats()},e=>{$("records").innerHTML='<p class="error">Could not load records. Publish the included Firestore rules and confirm Firestore exists.</p>';console.error(e)})});
 patientForm.addEventListener("keydown", e => {
-  if (e.ctrlKey || e.altKey || e.metaKey) return;
+  if (e.key !== "Enter" || e.ctrlKey || e.altKey || e.metaKey) return;
   const el = e.target;
   if (!el.matches("input, select, textarea")) return;
+  // Enter creates a new line in every textarea. Normal fields use Enter to move to the next field.
+  if (el.tagName === "TEXTAREA") return;
+  e.preventDefault();
   const fields = [...patientForm.querySelectorAll("input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled])")];
   const index = fields.indexOf(el);
-
-  if (e.key === "ArrowLeft") {
-    e.preventDefault();
-    const prev = fields[index - 1];
-    if (prev) {
-      prev.focus();
-      if (prev.tagName === "INPUT" && prev.type !== "date" && typeof prev.select === "function") prev.select();
-    }
-    return;
-  }
-
-  if (e.key === "Enter") {
-    if (el.tagName === "TEXTAREA") return;
-    e.preventDefault();
-    const next = fields[index + 1];
-    if (next) {
-      next.focus();
-      if (next.tagName === "INPUT" && next.type !== "date" && typeof next.select === "function") next.select();
-    }
+  const next = fields[index + 1];
+  if (next) {
+    next.focus();
+    if (next.tagName === "INPUT" && next.type !== "date" && typeof next.select === "function") next.select();
   }
 });
 $("patientForm").onsubmit=async e=>{e.preventDefault();$("message").textContent="Saving...";let u=auth.currentUser;if(!u)return;syncAge();let data={};ids.forEach(i=>data[i]=$(i).value.trim());data.age=data.age||"0 Years, 0 Months, 0 Days";data.ageYears=data.ageYears||"0";data.ageMonths=data.ageMonths||"0";data.ageDays=data.ageDays||"0";try{let path=["users",u.uid,"patients"];if($("recordId").value)await updateDoc(doc(db,...path,$("recordId").value),{...data,updatedAt:serverTimestamp()});else await addDoc(collection(db,...path),{...data,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});reset();$("message").textContent="Patient record saved successfully."}catch(x){console.error(x);$("message").textContent="Save failed. Publish firestore.rules and check Firebase.";$("message").className="error"}};
@@ -87,7 +75,7 @@ function render(){
           <div><b>BP</b><span>${esc(r.bp||"—")}</span></div>
           <div><b>Color Vision</b><span>RE: ${esc(r.colorVisionRe||"—")} | LE: ${esc(r.colorVisionLe||"—")}</span></div>
           <div><b>IOP</b><span>RE: ${esc(r.iopRe||"—")} | LE: ${esc(r.iopLe||"—")}</span></div>
-          <div><b>Examiner</b><span>${esc(r.examiner||"—")}</span></div><div><b>Diagnosis</b><span>${esc(r.diagnosis||"—")}</span></div>
+          <div><b>Examiner</b><span>${esc(r.examiner||"—")}</span></div><div><b>Treatment</b><span>${esc(r.diagnosis||"—")}</span></div><div><b>Diagnosis</b><span>${esc(r.diagnosisFinal||"—")}</span></div>
         </div></div>
 
         <div class="detail-section"><h4>Lens and Frame Details</h4><div class="detail-list">

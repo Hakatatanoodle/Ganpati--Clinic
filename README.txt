@@ -32,3 +32,9 @@ Updated form changes:
 - Lens/Frame Right Eye and Left Eye SPH/CYL/AXIS/VA/ADD input boxes are wider.
 - Added Previous Section button to move backward through the main form areas.
 - Existing Firebase user-specific Firestore structure is preserved.
+
+Latest UI updates:
+- Clinical Details now labels the previous Diagnosis field as Treatment and adds a separate Diagnosis field beside it.
+- Added logout confirmation dialog: “Do you really want to logout ?” with Yes and No actions.
+- Refreshed the visual design with a more professional clinic interface, polished spacing, cards, navigation, focus states, and a custom vector eye-care logo mark.
+- Existing Firebase authentication, Firestore user-specific records, age fields, refraction fields, payment calculations, patient records, search, edit/delete, and navigation are preserved.
