@@ -38,3 +38,49 @@ Latest UI updates:
 - Added logout confirmation dialog: “Do you really want to logout ?” with Yes and No actions.
 - Refreshed the visual design with a more professional clinic interface, polished spacing, cards, navigation, focus states, and a custom vector eye-care logo mark.
 - Existing Firebase authentication, Firestore user-specific records, age fields, refraction fields, payment calculations, patient records, search, edit/delete, and navigation are preserved.
+
+SMS BROADCAST SETUP
+-------------------
+The new SMS Broadcast tab lets the clinic compose an SMS, insert emojis, select individual patients or all patients, and send to their stored phone numbers.
+
+IMPORTANT: A normal browser cannot directly use a computer/phone SIM balance. For real carrier-SMS delivery, connect an Android phone containing the clinic SIM to an SMS gateway that exposes an HTTP API. The included Vercel API endpoint is configured for SMS Gateway for Android's API format. Their current documentation supports sending a text to multiple phone numbers and selecting a SIM number.
+
+Vercel environment variables required:
+SMS_GATE_URL=https://api.sms-gate.app/3rdparty/v1/messages
+SMS_GATE_USERNAME=your_gateway_username
+SMS_GATE_PASSWORD=your_gateway_password
+SMS_GATE_DEVICE_ID=your_android_device_id
+SMS_GATE_SIM_NUMBER=1
+
+The Android phone must be online/active and have the desired SIM inserted. Carrier SMS balance/message-pack usage is handled by that SIM/carrier, subject to the carrier's own limits and policies. Do not put gateway credentials directly into index.html or script.js.
+
+PHONE + SMS GATEWAY CONFIGURATION (CLOUD SERVER)
+-------------------------------------------------
+1. Use an Android phone with the clinic SIM inserted. The phone can still be used normally for calls, WhatsApp, etc.
+2. Install SMS Gateway for Android on the Android phone.
+3. Grant the app its required permissions, especially SEND_SMS. If you use SIM selection, also allow READ_PHONE_STATE.
+4. Open the app and enable Cloud Server.
+5. Tap the Offline/Online status control and connect the device. After the first successful connection, the app generates the Cloud Server username and password automatically.
+6. Keep the phone powered on and connected to the internet whenever the website needs to send SMS. Wi-Fi is enough; mobile data can be turned off if Wi-Fi is available. The phone still needs normal cellular signal and an SMS-capable SIM for the actual SMS delivery.
+7. Find the Android device ID in the SMS Gateway dashboard/device information. Use that ID as SMS_GATE_DEVICE_ID so the Vercel API targets the correct phone.
+8. In Vercel, open Project -> Settings -> Environment Variables and add:
+   SMS_GATE_URL=https://api.sms-gate.app/3rdparty/v1/messages
+   SMS_GATE_USERNAME=<the Cloud Server username>
+   SMS_GATE_PASSWORD=<the Cloud Server password>
+   SMS_GATE_DEVICE_ID=<the Android device ID>
+   SMS_GATE_SIM_NUMBER=1
+9. Save the variables and redeploy the Vercel project so the serverless API receives the new environment variables.
+10. Open the Ganapati Chasma Ghar website -> SMS Broadcast. First select only your own test number and send a short test message.
+11. After the test succeeds, test with a small number of authorized recipients before using Select All.
+12. Never place the gateway username/password in index.html, script.js, or other browser-side files.
+
+OFFICIAL DOCUMENTATION
+----------------------
+Getting Started: https://docs.sms-gate.app/getting-started/
+Installation: https://docs.sms-gate.app/installation/
+Public Cloud Server: https://docs.sms-gate.app/getting-started/public-cloud-server/
+Sending Messages API: https://docs.sms-gate.app/features/sending-messages/
+
+NOTE ABOUT PHONE INTERNET
+-------------------------
+The public Cloud Server mode requires an active internet connection on the Android device. Wi-Fi satisfies this requirement; mobile data is not required if Wi-Fi is available. The SIM's cellular network is still used by Android to transmit the actual SMS.
