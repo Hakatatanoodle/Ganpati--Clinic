@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ganapati Chasma Ghar | Patient Records</title><link rel="stylesheet" href="style.css"></head><body>
 <div id="auth" class="auth"><div class="authbox"><div class="brand"><img class="clinic-logo-image login-logo-image" src="ganapati-eye-care-logo.png" alt="Ganapati Eye Care Clinic logo"></div><div id="loginPanel"><h2>Clinic Login</h2><p>Sign in to access your patient records.</p><form id="loginForm"><label>Email<input id="loginEmail" type="email" required></label><label>Password<input id="loginPassword" type="password" required></label><button>Login</button><p id="loginError" class="error"></p></form><button id="toSignup" class="link">Create a new account</button></div><div id="signupPanel" class="hide"><h2>Create Account</h2><p>Create a private clinic account.</p><form id="signupForm"><label>Email<input id="signupEmail" type="email" required></label><label>Password<input id="signupPassword" type="password" minlength="6" required></label><label>Confirm Password<input id="signupConfirm" type="password" minlength="6" required></label><button>Create Account</button><p id="signupError" class="error"></p></form><button id="toLogin" class="link">Back to Login</button></div></div></div>
-<div id="app" class="hide"><header><div class="brand"><img class="clinic-logo-image header-logo-image" src="ganapati-eye-care-mark.png" alt="Ganapati Eye Care Clinic logo"><div><h1>Ganapati Eye Care Clinic</h1><small>Clear Vision, Better Life</small></div></div><div><span id="userEmail"></span> <button id="logout" class="secondary">Logout</button></div></header><div class="layout"><aside><button class="nav active" data-target="dashboardCard">⌂ <span>Dashboard</span></button><button class="nav" data-target="formCard">♟ <span>Add New Patient</span></button><button class="nav" data-target="recordsCard">▣ <span>Patient Records</span></button><button class="nav" data-target="formCard">⚙ <span>Settings</span></button><button class="nav" data-target="smsBroadcastCard">✉ <span>SMS Broadcast</span></button><button class="nav" data-target="usersCard">♟ <span>Users</span></button><button class="nav" data-target="backupCard">☁ <span>Backup</span></button><button class="nav" data-target="aboutCard">ⓘ <span>About Us</span></button><button id="sideLogout" class="nav">⇥ <span>Logout</span></button><div class="sidefoot">◉<br><b>Better Vision<br>Better Tomorrow</b></div></aside><main>
-<div class="heading"><div><h2 id="pageTitle">Dashboard</h2><small id="breadcrumb">Dashboard</small></div><div id="formActions"><button id="clear" class="secondary">Clear Form</button><button id="saveTop">▣ Save Patient</button></div></div>
+<div id="app" class="hide"><header><div class="brand"><img class="clinic-logo-image header-logo-image" src="ganapati-eye-care-mark.png" alt="Ganapati Eye Care Clinic logo"><div><h1>Ganapati Eye Care Clinic</h1><small>Clear Vision, Better Life</small></div></div><div><span id="userEmail"></span> <button id="logout" class="secondary">Logout</button></div></header><div class="layout"><aside><button class="nav active" data-target="dashboardCard">⌂ <span>Dashboard</span></button><button class="nav" data-target="formCard">♟ <span>Add New Patient</span></button><button class="nav" data-target="recordsCard">▣ <span>Patient Records</span></button><button class="nav" data-target="settingsCard">⚙ <span>Settings</span></button><button class="nav" data-target="smsBroadcastCard">✉ <span>SMS Broadcast</span></button><button class="nav" data-target="usersCard">♟ <span>Users</span></button><button class="nav" data-target="backupCard">☁ <span>Backup</span></button><button class="nav" data-target="aboutCard">ⓘ <span>About Us</span></button><button id="sideLogout" class="nav">⇥ <span>Logout</span></button><div class="sidefoot">◉<br><b>Better Vision<br>Better Tomorrow</b></div></aside><main>
+<div class="heading"><div><h2 id="pageTitle">Dashboard</h2><small id="breadcrumb">Dashboard</small></div><div id="formActions"><button id="prevTop" class="secondary">← Back</button><button id="clear" class="secondary">Clear Form</button><button id="saveTop">▣ Save Patient</button></div></div>
 <section id="dashboardCard" class="card dashboard-card"><div class="title"><b>⌂</b> Dashboard</div><div class="dashboard-grid"><button class="dash-tile" data-open="formCard"><span class="dash-icon">＋</span><strong>Add New Patient</strong><small>Create a new patient record</small></button><button class="dash-tile" data-open="recordsCard"><span class="dash-icon">▣</span><strong>Patient Records</strong><small>View, search and manage saved records</small></button><div class="dash-stat"><span class="dash-icon">#</span><strong id="dashTotal">0</strong><small>Total Patients</small></div><div class="dash-stat"><span class="dash-icon">◷</span><strong id="dashToday">0</strong><small>Today's Records</small></div></div></section>
 <section id="formCard" class="card hide"><div class="title"><b>1</b> Personal Details</div><form id="patientForm"><input id="recordId" type="hidden"><div class="g4"><label>Patient Name *<input id="name" required></label><label>Age *<div class="age-inputs"><div class="age-field"><span class="age-sublabel">Year</span><input id="ageYears" type="number" min="0" max="150" required></div><div class="age-field"><span class="age-sublabel">Month</span><input id="ageMonths" type="number" min="0" max="11"></div><div class="age-field"><span class="age-sublabel">Days</span><input id="ageDays" type="number" min="0" max="30"></div></div><input id="age" type="hidden"></label><label>Date *<input id="patientDate" type="date" required></label><label>Contact Number *<input id="contact" required type="tel"></label></div><div class="g3"><label>Address<input id="address"></label><label>Gender<select id="gender"><option value="">Select Gender</option><option>Male</option><option>Female</option><option>Other</option></select></label><label>Occupation<input id="occupation"></label></div>
 <div class="title"><b>2</b> Patient Refraction Details</div><div class="refgrid"><div class="rtable"><div class="rrow head"><span></span><b>RE</b><b>LE</b></div><div class="complaint-row"><label>Presenting Complaint <span class="optional">(C/C)</span><textarea id="presentingComplaint" rows="2"></textarea></label></div><div class="rrow"><span>UCVA (Unaided Visual Acuity)</span><input id="ucvaRe"><input id="ucvaLe"></div><div class="rrow"><span>PH (Pin Hole)</span><input id="phRe"><input id="phLe"></div><div class="rrow"><span>Dry Retinoscopy</span><input id="dryRe"><input id="dryLe"></div><div class="rrow"><span>Wet Retinoscopy</span><input id="wetRe"><input id="wetLe"></div></div><div>
@@ -51,17 +51,40 @@
 <div class="actions"><button type="button" id="prevSection" class="secondary">← Previous Section</button><button type="submit">Save Patient</button><button type="button" id="cancel" class="secondary hide">Cancel Edit</button><span id="message"></span></div></form></section>
 <section id="recordsCard" class="card hide"><div class="title"><b>9</b> Patient Records</div><div class="records-toolbar"><label>Search Patient<input id="search"></label></div><div id="records"></div></section>
 <section id="reportsCard" class="card hide"><div class="title"><b>R</b> Reports</div><div class="stats"><div><b id="total">0</b><small>Total Patients</small></div><div><b id="today">0</b><small>Today's Records</small></div></div></section>
+<section id="settingsCard" class="card hide">
+<div class="title"><b>⚙</b> Settings <small>Profile and appearance</small></div>
+<div class="settings-layout">
+  <div class="profile-panel">
+    <div class="profile-photo-wrap">
+      <img id="profilePhoto" class="profile-photo" src="" alt="Profile photo">
+      <div id="profileInitials" class="profile-initials">U</div>
+    </div>
+    <label class="profile-upload">Change Photo<input id="profilePhotoInput" type="file" accept="image/*"></label>
+    <label class="profile-name-label">Name<input id="profileName" maxlength="80" placeholder="Enter your name"></label>
+    <button type="button" id="saveProfile" class="settings-save">Save Profile</button>
+    <span id="profileStatus" class="settings-status"></span>
+  </div>
+  <div class="settings-panel">
+    <h3>Appearance</h3>
+    <div class="setting-row">
+      <div><strong>Dark Theme</strong><small>Use a dark appearance throughout the clinic app.</small></div>
+      <label class="switch"><input id="darkThemeToggle" type="checkbox"><span class="slider"></span></label>
+    </div>
+    <div class="setting-row-info">Your preference is saved on this device and restored when you sign in again.</div>
+  </div>
+</div>
+</section>
 <section id="smsBroadcastCard" class="card hide">
 <div class="title"><b>SMS</b> SMS Broadcast <small>Send messages to selected patients using the clinic SIM gateway</small></div>
 <div class="sms-layout">
   <div class="sms-composer">
-    <div class="sms-composer-head"><h3>Message</h3><span id="smsCount">0 / 160</span></div>
+    <div class="sms-composer-head"><h3>Message</h3><span id="smsCount">0 / 1000 words</span></div>
     <div class="sms-editor-wrap">
-      <textarea id="smsMessage" maxlength="160" placeholder="Type your message here..."></textarea>
+      <textarea id="smsMessage" placeholder="Type your message here..."></textarea>
       <button type="button" id="emojiToggle" class="emoji-btn" aria-label="Open emoji picker">😊</button>
     </div>
     <div id="emojiPicker" class="emoji-picker hide" aria-label="Emoji picker"></div>
-    <div class="sms-hint">Standard SMS is limited to 160 characters. Some Unicode emojis can reduce the SMS character limit.</div>
+    <div class="sms-hint">You can compose up to 1000 characters. Longer messages may be sent as multiple SMS parts, and Unicode emojis can reduce each SMS part&#39;s capacity.</div>
     <div class="sms-actions"><button type="button" id="sendBroadcast">Send SMS</button><span id="smsStatus"></span></div>
   </div>
   <div class="sms-recipients">

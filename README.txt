@@ -24,7 +24,7 @@ Latest updates:
 - Payment Total = Frame + Lens + Medicines + Clinical Test + Others; Remaining = Total - Advance.
 - Payment amounts use 0.10 increments.
 - Age boxes now have explicit "Year / Month / Days" labels above each box (instead of relying on placeholder text), and the Age column is wider so the boxes aren't squeezed down to spinner-only width.
-- Previous Section button now steps back one field at a time through every input/select/textarea on the form (in on-screen order), instead of only jumping between 7 fixed landmark fields.
+- Previous Section navigation now moves backward through the form sections (1 to 8) and focuses the first field of the previous section. A top Back button and keyboard ArrowLeft/Alt+ArrowLeft navigation are also supported while the form is open.
 
 
 Updated form changes:
@@ -84,3 +84,34 @@ Sending Messages API: https://docs.sms-gate.app/features/sending-messages/
 NOTE ABOUT PHONE INTERNET
 -------------------------
 The public Cloud Server mode requires an active internet connection on the Android device. Wi-Fi satisfies this requirement; mobile data is not required if Wi-Fi is available. The SIM's cellular network is still used by Android to transmit the actual SMS.
+
+
+LATEST CHANGES IN THIS BUILD
+-----------------------------
+- Settings is now a real sidebar section instead of opening the patient form.
+- Settings includes a circular profile photo selector that accepts an image from the device gallery. The photo is resized and saved locally on the current device.
+- Settings includes a name field below the profile photo and a Save Profile button.
+- Settings includes a functional Dark Theme toggle. The preference is saved for the signed-in Firebase user on the current device.
+- SMS Broadcast composer now allows up to 1000 WORDS instead of 160 characters. Very long messages may be split into multiple carrier SMS parts and can consume multiple SMS units.
+- Reports remains in the code/data logic but is not shown as a left-sidebar tab.
+- Medicines remains available in the patient form but is not shown as a left-sidebar tab.
+- Previous Section / Back navigation is restored and now works by form section rather than only by individual field.
+
+SMS GATEWAY QUICK SETUP
+-----------------------
+1. Put the clinic SIM in an Android phone.
+2. Connect the Android phone to Wi-Fi. Mobile data may remain OFF.
+3. Install SMS Gateway for Android and grant the required SMS permissions.
+4. Enable Cloud Server in the app and connect the device.
+5. Obtain the Cloud Server username, password, and Android device ID. Never share the password publicly.
+6. In Vercel -> Project -> Settings -> Environment Variables, add:
+   SMS_GATE_URL=https://api.sms-gate.app/3rdparty/v1/messages
+   SMS_GATE_USERNAME=<Cloud Server username>
+   SMS_GATE_PASSWORD=<Cloud Server password>
+   SMS_GATE_DEVICE_ID=<Android device ID>
+   SMS_GATE_SIM_NUMBER=1
+7. Redeploy the Vercel project.
+8. Keep the Android phone powered on, connected to Wi-Fi, connected to the SMS gateway, and with cellular signal whenever messages are being sent.
+9. Test from SMS Broadcast using only your own phone number first.
+10. After the test succeeds, test with a few authorized recipients before broadcasting to a larger group.
+
