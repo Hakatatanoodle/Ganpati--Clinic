@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ganapatichasmagharshareable.vercel.app/sitemap.xml
