@@ -27,8 +27,8 @@
 @media(max-width:700px){.payment-photo-grid{grid-template-columns:1fr}.payment-photo-grid label{grid-template-columns:120px 1fr}}
 
 /* Updated patient form refinements */
-.age-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
-.age-inputs input{min-width:0}
+.age-inputs{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:6px}
+.age-inputs input{min-width:0;width:100%}#ageYears{min-width:68px}
 .age-field{display:grid;gap:3px;min-width:0}
 .age-sublabel{font-size:9px;font-weight:700;color:#5c7196;text-transform:uppercase;letter-spacing:.3px}
 .lens{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
@@ -38,7 +38,6 @@
 .lens > div:nth-child(3) > label{min-width:0}
 .lens .frame-box{min-width:0}
 .lens .lens-options{grid-column:1/-1;margin-top:0}
-#prevSection{min-width:150px}
 @media(max-width:900px){.lens{grid-template-columns:1fr}.lens > div:nth-child(3){grid-template-columns:1fr}.lens .lens-options{grid-column:auto}}
 @media(max-width:600px){.age-inputs{grid-template-columns:1fr}.lens .four{gap:4px;padding:7px}.lens .four input{padding:9px 5px;font-size:13px}}
 /* Professional clinic visual refresh - preserves existing functionality */
@@ -87,3 +86,13 @@ footer{color:#71829a;padding:14px}
 .dark-theme{--ink:#e7eef8;--muted:#9fb0c7;--line:#33465f;--soft:#16253a;--surface:#101d2e;background:#0b1524;color:var(--ink)}
 .dark-theme header{background:rgba(14,28,45,.97);border-bottom-color:#263950}.dark-theme .heading h2,.dark-theme .heading small,.dark-theme .brand h1{color:#e7eef8}.dark-theme .heading small,.dark-theme .brand small{color:#9fb0c7}.dark-theme main{background:#0b1524}.dark-theme .card,.dark-theme .profile-panel,.dark-theme .settings-panel,.dark-theme .sms-composer,.dark-theme .sms-recipients{background:#101d2e;border-color:#2c4058;color:#dce7f5}.dark-theme .title,.dark-theme .settings-panel h3,.dark-theme .settings-panel strong,.dark-theme .sms-composer h3,.dark-theme .sms-recipients h3,.dark-theme .sms-composer-head span,.dark-theme .sms-recipient-head small{color:#9ec7ff}.dark-theme input,.dark-theme select,.dark-theme textarea{background:#0c1828;color:#e7eef8;border-color:#344a65}.dark-theme input::placeholder,.dark-theme textarea::placeholder{color:#7f92ab}.dark-theme .sub,.dark-theme .rtable,.dark-theme .frame-box,.dark-theme .leye,.dark-theme .reye,.dark-theme .records-toolbar,.dark-theme .detail-section,.dark-theme .treatment-diagnosis label{background:#0f1d2e;border-color:#31465f}.dark-theme .sub h4,.dark-theme .frame-box h4{background:#162941;color:#a8caff}.dark-theme .record,.dark-theme .sms-patient-list{background:#0e1b2b;border-color:#30445d}.dark-theme .sms-patient{border-bottom-color:#243850}.dark-theme .sms-patient b{color:#dbe8f7}.dark-theme .sms-patient small,.dark-theme .empty,.dark-theme .sms-hint{color:#91a3ba}.dark-theme .select-all{color:#b7cbe3!important}.dark-theme .setting-row{border-top-color:#2b4059}.dark-theme .setting-row-info,.dark-theme .sms-gateway-note{background:#142a43;border-color:#31547c;color:#a8c1df}.dark-theme .profile-upload{background:#152b45;border-color:#31547c;color:#a9cbfa!important}.dark-theme .profile-photo-wrap{border-color:#1b2d42;background:#162a43}.dark-theme footer,.dark-theme .right{color:#91a3ba;background:#0b1524}.dark-theme .logout-modal{background:#101d2e;border-color:#2f4259}.dark-theme .logout-modal h3{color:#e7eef8}.dark-theme .logout-modal p{color:#9aacc2}
 @media(max-width:800px){.settings-layout{grid-template-columns:1fr}.profile-panel,.settings-panel{min-height:0}}
+
+/* Dark-theme readability corrections */
+.dark-theme label,.dark-theme .heading small,.dark-theme .brand small,.dark-theme .record small,.dark-theme .recent small,.dark-theme .recent time,.dark-theme .stats small,.dark-theme .dash-tile small,.dark-theme .dash-stat small,.dark-theme .empty,.dark-theme .payment-note,.dark-theme .age-sublabel{color:#d2deed!important}
+.dark-theme .heading h2,.dark-theme .brand h1,.dark-theme .title,.dark-theme .title small,.dark-theme .dash-tile,.dark-theme .dash-stat,.dark-theme .dash-tile strong,.dark-theme .dash-stat strong,.dark-theme .record h3,.dark-theme .record b,.dark-theme .stats b,.dark-theme .field-heading,.dark-theme .sub h4,.dark-theme .frame-box h4,.dark-theme .detail-section h4,.dark-theme .detail-list b,.dark-theme .detail-list span,.dark-theme .payment-table-box h4{color:#f1f6ff!important}
+.dark-theme .card,.dark-theme .dash-tile,.dark-theme .dash-stat,.dark-theme .record,.dark-theme .stats div,.dark-theme .records-toolbar,.dark-theme .detail-section,.dark-theme .payment-table-box{background:#122238!important;border-color:#3b526e!important}
+.dark-theme .title{border-bottom-color:#3b526e!important}
+.dark-theme .dash-icon{color:#8fc0ff!important}
+.dark-theme .dash-stat strong{text-shadow:0 0 1px rgba(255,255,255,.18)}
+.dark-theme .detail-table-head,.dark-theme .detail-subgrid>div,.dark-theme .notes-detail-grid>div{background:#172b43!important;color:#eef5ff!important}
+.dark-theme .detail-table>div,.dark-theme .detail-section .detail-list>div{border-bottom-color:#3b526e!important}
